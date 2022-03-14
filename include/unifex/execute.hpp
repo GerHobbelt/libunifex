@@ -72,7 +72,7 @@ namespace _cpo {
 } // namespace _cpo
 } // namespace _execute
 
-inline constexpr _execute::_cpo::_fn execute {};
+inline const _execute::_cpo::_fn execute {};
 } // namespace unifex
 
 #include <unifex/detail/epilogue.hpp>
