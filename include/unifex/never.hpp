@@ -84,6 +84,13 @@ struct sender {
 
   static constexpr bool sends_done = true;
 
+  // we'll complete inline if started with a stopped stop token
+  static constexpr blocking_kind blocking = blocking_kind::maybe;
+
+  // we complete wherever the stop callback is invoked, which must be on the
+  // receiver's scheduler if scheduler affinity is required
+  static constexpr bool is_always_scheduler_affine = true;
+
   template <typename Receiver>
   operation<Receiver> connect(Receiver&& receiver) {
     return operation<Receiver>{(Receiver &&) receiver};

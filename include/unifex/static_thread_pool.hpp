@@ -68,6 +68,10 @@ namespace _static_thread_pool {
 
         static constexpr bool sends_done = true;
 
+        static constexpr blocking_kind blocking = blocking_kind::never;
+
+        static constexpr bool is_always_scheduler_affine = false;
+
       private:
         template <typename Receiver>
         operation<Receiver> make_operation_(Receiver&& r) const {

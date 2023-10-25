@@ -162,6 +162,11 @@ public:
 
     static constexpr bool sends_done = sender_traits<Source>::sends_done;
 
+    static constexpr blocking_kind blocking = sender_traits<Source>::blocking;
+
+    static constexpr bool is_always_scheduler_affine
+        = sender_traits<Source>::is_always_scheduler_affine;
+
     template<typename Source2, typename Func2>
     explicit type(Source2&& source, Func2&& func, Policy policy)
     : source_((Source2&&)source)
@@ -187,6 +192,10 @@ public:
                 static_cast<Self&&>(self).func_,
                 static_cast<Self&&>(self).policy_,
                 static_cast<Receiver&&>(r)});
+    }
+
+    friend constexpr blocking_kind tag_invoke(tag_t<unifex::blocking>, const type& s) noexcept {
+      return unifex::blocking(s.source_);
     }
 
 private:

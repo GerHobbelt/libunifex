@@ -16,6 +16,8 @@
 #pragma once
 
 #include <unifex/config.hpp>
+
+#include <unifex/blocking.hpp>
 #include <unifex/detail/unifex_fwd.hpp>
 #include <unifex/tag_invoke.hpp>
 #include <unifex/type_list.hpp>
@@ -42,11 +44,39 @@ struct sender_traits;
 
 /// \cond
 namespace detail {
+  using unifex::_block::_has_blocking;
+
   template <template <template <typename...> class, template <typename...> class> class>
   struct _has_value_types;
 
   template <template <template <typename...> class> class>
   struct _has_error_types;
+
+  template <typename Sender, bool = _has_blocking<Sender>::value>
+  struct _blocking : blocking_kind::constant<blocking_kind::maybe> {};
+
+  template <typename Sender>
+  struct _blocking<Sender, true>
+    : blocking_kind::constant<Sender::blocking> {};
+
+  template <typename Sender, typename = void>
+  struct _has_is_always_scheduler_affine : std::false_type {};
+
+  template <typename Sender>
+  struct _has_is_always_scheduler_affine<
+      Sender,
+      std::void_t<decltype(Sender::is_always_scheduler_affine)>>
+    : std::true_type {};
+
+  template <
+      typename Sender,
+      bool = _has_is_always_scheduler_affine<Sender>::value>
+  struct _is_always_scheduler_affine
+    : std::bool_constant<blocking_kind::always_inline == _blocking<Sender>::value> {};
+
+  template <typename Sender>
+  struct _is_always_scheduler_affine<Sender, true>
+    : std::bool_constant<Sender::is_always_scheduler_affine> {};
 
   template <typename S>
   UNIFEX_CONCEPT_FRAGMENT(  //
@@ -98,6 +128,10 @@ namespace detail {
     using error_types = typename S::template error_types<Variant>;
 
     static constexpr bool sends_done = S::sends_done;
+
+    static constexpr bool is_always_scheduler_affine = _is_always_scheduler_affine<S>::value;
+
+    static constexpr blocking_kind blocking = _blocking<S>::value;
   };
 
   template <typename S>

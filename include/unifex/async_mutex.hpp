@@ -60,6 +60,13 @@ private:
 
     static constexpr bool sends_done = false;
 
+    // we complete inline if we manage to grab the lock immediately
+    static constexpr blocking_kind blocking = blocking_kind::maybe;
+
+    // if we have to wait for the lock, we'll be resumed on whichever scheduler
+    // happens to be running the unlock()
+    static constexpr bool is_always_scheduler_affine = false;
+
     lock_sender(const lock_sender &) = delete;
     lock_sender(lock_sender &&) = default;
 

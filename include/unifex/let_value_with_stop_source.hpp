@@ -116,6 +116,13 @@ public:
 
     static constexpr bool sends_done = sender_traits<InnerOp>::sends_done;
 
+    static constexpr blocking_kind blocking = sender_traits<InnerOp>::blocking;
+
+    // TODO: is this safe?  giving the user a stop source means they can invoke
+    //       stop callbacks and they could do it on the wrong thread
+    static constexpr bool is_always_scheduler_affine
+        = sender_traits<InnerOp>::is_always_scheduler_affine;
+
     template<typename SuccessorFactory2>
     explicit type(SuccessorFactory2&& func) : func_((SuccessorFactory2&&)func)
     {}

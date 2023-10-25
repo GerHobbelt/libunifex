@@ -47,6 +47,11 @@ struct _sender<Sender>::type final {
 
   static constexpr bool sends_done = sender_traits<Sender>::sends_done;
 
+  static constexpr blocking_kind blocking = sender_traits<Sender>::blocking;
+
+  static constexpr bool is_always_scheduler_affine
+      = sender_traits<Sender>::is_always_scheduler_affine;
+
   template(typename Self, typename Receiver)  //
       (requires same_as<type, remove_cvref_t<Self>> AND
            sender_to<member_t<Self, Sender>, Receiver>)  //
@@ -62,8 +67,8 @@ struct _sender<Sender>::type final {
         static_cast<Receiver&&>(r));
   }
 
-  friend auto tag_invoke(tag_t<blocking>, const type& s) noexcept {
-    return blocking(s.sender_);
+  friend constexpr blocking_kind tag_invoke(tag_t<blocking>, const type& s) noexcept {
+    return unifex::blocking(s.sender_);
   }
 };
 

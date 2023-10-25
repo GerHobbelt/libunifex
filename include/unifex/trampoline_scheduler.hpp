@@ -115,7 +115,7 @@ class scheduler {
           }
         }
       }
-      
+
     public:
       using operation_base::start;
     };
@@ -138,6 +138,11 @@ class scheduler {
     using error_types = Variant<>;
 
     static constexpr bool sends_done = true;
+
+    // it's always_inline until we blow the stack, then it's never
+    static constexpr blocking_kind blocking = blocking_kind::maybe;
+
+    static constexpr bool is_always_scheduler_affine = true;
 
     template <typename Receiver>
     operation<Receiver> connect(Receiver&& receiver) const& {

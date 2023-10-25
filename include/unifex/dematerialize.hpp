@@ -163,6 +163,11 @@ namespace _demat {
 
     static constexpr bool sends_done = sender_traits<Source>::sends_done;
 
+    static constexpr blocking_kind blocking = sender_traits<Source>::blocking;
+
+    static constexpr bool is_always_scheduler_affine
+        = sender_traits<Source>::is_always_scheduler_affine;
+
     template <typename Source2>
     explicit type(Source2&& source)
         noexcept(std::is_nothrow_constructible_v<Source, Source2>)
@@ -180,8 +185,9 @@ namespace _demat {
           receiver_t<Receiver>{static_cast<Receiver&&>(r)});
     }
 
-    friend constexpr auto tag_invoke(tag_t<unifex::blocking>, const type& self) noexcept {
-      return blocking(self.source_);
+    friend constexpr blocking_kind
+        tag_invoke(tag_t<unifex::blocking>, const type& self) noexcept {
+      return unifex::blocking(self.source_);
     }
   private:
     Source source_;
