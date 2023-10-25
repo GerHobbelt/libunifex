@@ -85,6 +85,7 @@
 
 #if !defined(UNIFEX_NO_LIBURING)
 #cmakedefine01 UNIFEX_NO_LIBURING
+#cmakedefine01 HAVE_LINUX_TIME_TYPES_H
 #endif
 
 #if !defined(UNIFEX_ENABLE_CONTINUATION_VISITATIONS)
@@ -222,6 +223,13 @@
   #define UNIFEX_NO_INLINE __declspec(noinline)
 #else
   #define UNIFEX_NO_INLINE
+#endif
+
+#if defined(__GNUC__) && !defined(__clang__) && (__GNUC__ == 9)
+  #define UNIFEX_INGORE_MAYBE_UNINITIALIZED_IN_GCC_9 \
+      UNIFEX_DIAGNOSTIC_IGNORE("-Wmaybe-uninitialized")
+#else
+  #define UNIFEX_INGORE_MAYBE_UNINITIALIZED_IN_GCC_9
 #endif
 
 #if defined(__GNUC__) || defined(__clang__)
