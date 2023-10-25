@@ -20,57 +20,25 @@
 #include <unifex/let_value_with.hpp>
 #include <unifex/let_value_with_stop_source.hpp>
 #include <unifex/let_value_with_stop_token.hpp>
+#include <unifex/nest.hpp>
 #include <unifex/scheduler_concepts.hpp>
 #include <unifex/sync_wait.hpp>
 #include <unifex/then.hpp>
 #include <unifex/timed_single_thread_context.hpp>
+#include <unifex/v2/async_scope.hpp>
 #include <unifex/when_all.hpp>
 
 #include <chrono>
 #include <iostream>
 
+#include "stoppable_receiver.hpp"
+
 #include <gtest/gtest.h>
 
 using namespace unifex;
+using namespace unifex_test;
 using namespace std::chrono;
 using namespace std::chrono_literals;
-
-struct UnstoppableSimpleIntReceiver {
-  void set_value(int) noexcept {}
-
-  void set_error(std::exception_ptr) noexcept {}
-
-  void set_done() noexcept {}
-};
-
-struct InplaceStoppableIntReceiver : public UnstoppableSimpleIntReceiver {
-  InplaceStoppableIntReceiver(inplace_stop_source& source) noexcept
-    : source_(source) {}
-
-  friend inplace_stop_token tag_invoke(
-      tag_t<get_stop_token>, const InplaceStoppableIntReceiver& r) noexcept {
-    return r.source_.get_token();
-  }
-
-  inplace_stop_source& source_;
-};
-
-struct inplace_stop_token_redux : public inplace_stop_token {
-  inplace_stop_token_redux(inplace_stop_token token)
-    : inplace_stop_token(token) {}
-};
-
-struct NonInplaceStoppableIntReceiver : public UnstoppableSimpleIntReceiver {
-  NonInplaceStoppableIntReceiver(inplace_stop_source& source) noexcept
-    : source_(source) {}
-
-  friend inplace_stop_token_redux tag_invoke(
-      tag_t<get_stop_token>, const NonInplaceStoppableIntReceiver& r) noexcept {
-    return inplace_stop_token_redux{r.source_.get_token()};
-  }
-
-  inplace_stop_source& source_;
-};
 
 struct LetWithStopToken : testing::Test {
   struct DestructionCounter {
@@ -407,3 +375,16 @@ TEST_F(LetWithStopToken, PreserveOperationStateNonInPlaceStoppable) {
   });
 }
 
+TEST_F(LetWithStopToken, NestingWithAMutableFactoryWorks) {
+  unifex::v2::async_scope scope;
+
+  auto result = unifex::sync_wait(unifex::nest(
+      unifex::let_value_with_stop_token(
+          [](auto) mutable noexcept { return unifex::just(1); }),
+      scope));
+
+  ASSERT_TRUE(result.has_value());
+  EXPECT_EQ(*result, 1);
+
+  unifex::sync_wait(scope.join());
+}

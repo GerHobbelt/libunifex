@@ -22,10 +22,12 @@
 #include <unifex/just_error.hpp>
 #include <unifex/let_value.hpp>
 #include <unifex/materialize.hpp>
+#include <unifex/nest.hpp>
 #include <unifex/scheduler_concepts.hpp>
 #include <unifex/sync_wait.hpp>
 #include <unifex/then.hpp>
 #include <unifex/timed_single_thread_context.hpp>
+#include <unifex/v2/async_scope.hpp>
 #include <unifex/variant_sender.hpp>
 
 #include <chrono>
@@ -185,11 +187,15 @@ TEST(Variant, CombineJustAndJust_Invalid) {
   IntAndStringReceiver rec;
 
   auto just_variant_sender = func(true);
+  using JustInt = decltype(just_variant_sender);
+  static_assert(blocking_kind::always_inline == cblocking<JustInt>());
   EXPECT_FALSE(just_variant_sender.sends_done);
   auto op = unifex::connect(just_variant_sender, rec);
   unifex::start(op);
 
   auto just_string_sender = func(false);
+  using JustString = decltype(just_variant_sender);
+  static_assert(blocking_kind::always_inline == cblocking<JustString>());
   EXPECT_FALSE(just_variant_sender.sends_done);
   auto op2 = unifex::connect(just_string_sender, rec);
   unifex::start(op2);
@@ -205,6 +211,11 @@ using conditionally_lvalue_t = std::conditional_t<lvalue, std::add_lvalue_refere
 template<bool lvalueConnectNoexcept, bool rvalueConnectNoexcept, bool isLvalueReference = true>
 using is_noexcept = unifex::is_nothrow_connectable<conditionally_lvalue_t<test_sender_t<lvalueConnectNoexcept, rvalueConnectNoexcept>, isLvalueReference>, IntAndStringReceiver>;
 } // namespace
+
+TEST(Variant, BlockingKind) {
+  // default
+  static_assert(blocking_kind::maybe == cblocking<test_sender_t<true, true>>());
+}
 
 TEST(Variant, TestNoexcept) {
   auto both_no_except = is_noexcept<true, true>::value;
@@ -234,3 +245,20 @@ TEST(Variant, TestNoexcept_RvalueRef) {
   EXPECT_TRUE(rvalue_no_except);
 }
 
+TEST(Variant, TestMSVCCpp20RegressionScenario) {
+  unifex::v2::async_scope scope;
+  unifex::async_manual_reset_event evt{true};
+
+  auto ret = unifex::sync_wait(unifex::nest(
+      unifex::let_value(
+          evt.async_wait(),
+          []() noexcept {
+            return unifex::variant_sender<decltype(unifex::just())>{
+                unifex::just()};
+          }),
+      scope));
+
+  unifex::sync_wait(scope.join());
+
+  ASSERT_TRUE(ret.has_value());
+}
