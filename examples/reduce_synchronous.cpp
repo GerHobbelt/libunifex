@@ -23,7 +23,7 @@
 
 using namespace unifex;
 
-int main() {
+int main(void) {
 
   int finalResult;
   sync_wait(then(

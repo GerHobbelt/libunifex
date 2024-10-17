@@ -28,7 +28,7 @@
 using namespace unifex;
 using namespace std::chrono_literals;
 
-int main() {
+int main(void) {
   timed_single_thread_context ctx;
 
   // Check that the schedule() operation can pick up the current

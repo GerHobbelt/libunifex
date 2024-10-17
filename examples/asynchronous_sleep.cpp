@@ -25,7 +25,7 @@ unifex::task<void> asyncMain() {
 }
 #endif  // UNIFEX_NO_COROUTINES
 
-int main() {
+int main(void) {
   auto start_time = steady_clock::now();
 #if !UNIFEX_NO_COROUTINES
   sync_wait(asyncMain());

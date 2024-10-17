@@ -64,7 +64,7 @@ static constexpr int BENCHMARK_DURATION = 10;
 
 static constexpr unsigned char data[6] = {'h', 'e', 'l', 'l', 'o', '\n'};
 
-int main() {
+int main(void) {
   io_epoll_context ctx;
 
   inplace_stop_source stopSource;
@@ -201,7 +201,7 @@ int main() {
 
 #else // !UNIFEX_NO_EPOLL
 #include <cstdio>
-int main() {
+int main(void) {
   printf("epoll support not found\n");
 }
 #endif // !UNIFEX_NO_EPOLL

@@ -25,7 +25,7 @@
 
 using namespace unifex;
 
-int main() {
+int main(void) {
   single_thread_context threadContext;
 
   auto thread = threadContext.get_scheduler();

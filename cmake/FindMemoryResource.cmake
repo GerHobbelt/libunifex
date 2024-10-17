@@ -181,7 +181,7 @@ if(CXX_MEMORY_RESOURCE_HAVE_PMR)
     string(CONFIGURE [[
         #include <@CXX_MEMORY_RESOURCE_HEADER@>
 
-        int main() {
+        int main(void) {
             @CXX_MEMORY_RESOURCE_NAMESPACE@::polymorphic_allocator<char> alloc{
                 @CXX_MEMORY_RESOURCE_NAMESPACE@::new_delete_resource()};
             (void) alloc;

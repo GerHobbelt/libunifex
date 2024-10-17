@@ -209,7 +209,7 @@ if(CXX_COROUTINES_HAVE_COROUTINES)
             co_return n * co_await f(n - 1);
         }
         
-        int main() {
+        int main(void) {
           return f(5).await_resume() != 120;
         }
     ]] code @ONLY)

@@ -21,7 +21,7 @@ void sleep() {
   on(timer.get_scheduler(), delay(1000ms)) | sync_wait();
 }
 
-int main() {
+int main(void) {
   auto start_time = steady_clock::now();
   sleep();
   cout << "Total time is: "

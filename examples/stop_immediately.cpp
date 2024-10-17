@@ -29,7 +29,7 @@
 using namespace unifex;
 using namespace std::chrono;
 
-int main() {
+int main(void) {
   thread_unsafe_event_loop eventLoop;
 
   std::printf("starting\n");

@@ -26,7 +26,7 @@
 
 using namespace unifex;
 
-int main() {
+int main(void) {
   single_thread_context context1;
   single_thread_context context2;
 

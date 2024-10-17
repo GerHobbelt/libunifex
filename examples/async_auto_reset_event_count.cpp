@@ -22,7 +22,7 @@
 
 using namespace unifex;
 
-int main() {
+int main(void) {
   async_auto_reset_event evt{true};
   sync_wait(then(
       reduce_stream(

@@ -82,7 +82,7 @@ task<int> dump_async_trace_in_coroutine() {
 }
 #endif
 
-int main() {
+int main(void) {
   timed_single_thread_context context;
 
   auto startTime = steady_clock::now();

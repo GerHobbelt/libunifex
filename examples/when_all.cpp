@@ -26,7 +26,7 @@ using namespace unifex;
 using namespace std::chrono;
 using namespace std::chrono_literals;
 
-int main() {
+int main(void) {
   timed_single_thread_context context;
   auto scheduler = context.get_scheduler();
 

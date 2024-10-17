@@ -21,7 +21,7 @@
 
 using namespace unifex;
 
-int main() {
+int main(void) {
     single_thread_context ctx;
 
     for (int i = 0; i < 5; ++i) {

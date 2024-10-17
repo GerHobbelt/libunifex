@@ -29,7 +29,7 @@ auto run_on(Scheduler&& s, F&& func) {
   return then(schedule((Scheduler &&) s), (F &&) func);
 }
 
-int main() {
+int main(void) {
   static_thread_pool tpContext;
   auto tp = tpContext.get_scheduler();
   std::atomic<int> x = 0;

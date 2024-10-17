@@ -30,7 +30,7 @@
 using namespace unifex;
 using namespace std::literals::chrono_literals;
 
-int main() {
+int main(void) {
   timed_single_thread_context context;
 
   using namespace std::chrono;

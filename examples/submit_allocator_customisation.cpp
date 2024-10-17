@@ -82,7 +82,7 @@ void test(Scheduler scheduler, Allocator allocator) {
   UNIFEX_ASSERT(value == 3);
 }
 
-int main() {
+int main(void) {
   {
     single_thread_context thread;
     test(thread.get_scheduler(), std::allocator<std::byte>{});

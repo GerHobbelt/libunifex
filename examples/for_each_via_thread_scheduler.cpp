@@ -25,7 +25,7 @@
 
 using namespace unifex;
 
-int main() {
+int main(void) {
   single_thread_context context;
 
   sync_wait(then(

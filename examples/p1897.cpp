@@ -88,7 +88,7 @@ struct iota_view {
 };
 } // namespace ranges
 
-int main() {
+int main(void) {
   // use seq, which supports a forward range
   auto result = sync_wait(indexed_for(
       just(42),

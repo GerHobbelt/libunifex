@@ -20,7 +20,7 @@
 
 using namespace unifex;
 
-int main() {
+int main(void) {
   timed_single_thread_context context;
   auto schedr = context.get_scheduler();
 

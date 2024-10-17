@@ -183,7 +183,7 @@ delegating_scheduler delegating_context::get_scheduler() noexcept {
 }
 } // namespace
 
-int main() {
+int main(void) {
   delegating_context inner_delegating_ctx{2};
   delegating_context outer_delegating_ctx{3};
 

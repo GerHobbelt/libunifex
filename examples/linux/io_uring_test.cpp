@@ -93,7 +93,7 @@ auto read_file(io_uring_context::scheduler s, const char* path) {
       });
 }
 
-int main() {
+int main(void) {
   io_uring_context ctx;
 
   inplace_stop_source stopSource;
@@ -156,7 +156,7 @@ int main() {
 #else // UNIFEX_NO_LIBURING
 
 #include <cstdio>
-int main() {
+int main(void) {
   printf("liburing support not found\n");
   return 0;
 }

@@ -30,7 +30,7 @@
 
 using namespace unifex;
 
-int main() {
+int main(void) {
   async_mutex mutex;
 
   int sharedState = 0;
@@ -63,7 +63,7 @@ int main() {
 
 #include <cstdio>
 
-int main() {
+int main(void) {
     // Very simple usage of async_mutex.
 
     unifex::async_mutex m;

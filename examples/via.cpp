@@ -23,7 +23,7 @@
 
 using namespace unifex;
 
-int main() {
+int main(void) {
   inline_scheduler scheduler;
   sync_wait_r<void>(
       via(scheduler, then(schedule(scheduler), []() {

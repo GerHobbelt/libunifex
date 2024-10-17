@@ -28,7 +28,7 @@ using namespace unifex;
 // This test uses the trampoline_scheduler to avoid stack-overflow due to very
 // deep recursion from a reduce over a synchronous stream.
 
-int main() {
+int main(void) {
   sync_wait(then(
       reduce_stream(
           typed_via_stream(

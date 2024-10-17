@@ -28,7 +28,7 @@ using namespace std::chrono_literals;
 
 struct my_error {};
 
-int main() {
+int main(void) {
 #if !UNIFEX_NO_EXCEPTIONS
   timed_single_thread_context context;
 

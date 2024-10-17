@@ -26,7 +26,7 @@
 
 using namespace unifex;
 
-int main() {
+int main(void) {
     single_thread_context ctx;
 
     [[maybe_unused]] std::optional<int> result = sync_wait(

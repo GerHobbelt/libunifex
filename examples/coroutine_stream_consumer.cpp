@@ -42,7 +42,7 @@ auto done_as_void(Sender&& sender) {
   return let_done((Sender&&)sender, [] { return just(); });
 }
 
-int main() {
+int main(void) {
   using namespace std::chrono;
 
   timed_single_thread_context context;
@@ -82,7 +82,7 @@ int main() {
 
 #include <cstdio>
 
-int main() {
+int main(void) {
   std::printf(
       "This test only supported for compilers that support coroutines\n");
   return 0;

@@ -23,7 +23,7 @@
 
 using namespace unifex;
 
-int main() {
+int main(void) {
   sync_wait(then(
       for_each(
           transform_stream(

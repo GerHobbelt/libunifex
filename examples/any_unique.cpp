@@ -86,7 +86,7 @@ class counting_memory_resource : public memory_resource {
 };
 #endif
 
-int main() {
+int main(void) {
   using A = unifex::any_unique_t<get_typeid>;
   using B = unifex::any_unique_t<>;
   {

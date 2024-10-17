@@ -47,7 +47,7 @@ struct trace_construction_destruction {
 
 std::atomic<int> trace_construction_destruction::instanceCount = 0;
 
-int main() {
+int main(void) {
   {
     unifex::new_thread_context ctx;
 
